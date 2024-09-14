@@ -86,13 +86,15 @@ export default function App() {
             height={3}
             width={10}
             text="Correct"
-            onClick={() => updateCorrect()} // Wrap in an anonymous function
+            onClick={() => updateCorrect()}
+            className="correct" // Add class for correct button
           />
           <Button
             height={3}
             width={10}
             text="Incorrect"
-            onClick={() => updateIncorrect()} // Wrap in an anonymous function
+            onClick={() => updateIncorrect()}
+            className="incorrect" // Add class for incorrect button
           />
         </div>
       </div>
