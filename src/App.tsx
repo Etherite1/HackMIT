@@ -166,7 +166,6 @@ export default function App() {
             height={3}
             width={10}
             text="New query"
-            background_color="red"
             onClick={() => {
               setStage("user_input");
             }}
