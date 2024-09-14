@@ -15,8 +15,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export function Button({ height, width, text, ...props }: ButtonProps) {
   return (
-    <button type="submit" style={{ height: `${height}rem`, width: `${width}rem`, margin: '0 0.5rem',  // Add some horizontal margin
-  }} {...props}>
+    <button
+      type="submit"
+      style={{
+        height: `${height}rem`,
+        width: `${width}rem`,
+        margin: "0 0.5rem", // Add some horizontal margin
+      }}
+      {...props}
+    >
       {text}
     </button>
   );
@@ -24,9 +31,10 @@ export function Button({ height, width, text, ...props }: ButtonProps) {
 
 export default function App() {
   const messages = useQuery(api.messages.list);
+  const accuracy = useQuery(api.messages.list_accuracy);
   const sendMessage = useMutation(api.messages.send);
-  const updateCorrect = useMutation(api.messages.updateCorrect); 
-  const updateIncorrect = useMutation(api.messages.updateIncorrect); 
+  const updateCorrect = useMutation(api.messages.updateCorrect);
+  const updateIncorrect = useMutation(api.messages.updateIncorrect);
 
   const [newMessageText, setNewMessageText] = useState("");
 
@@ -45,7 +53,7 @@ export default function App() {
       <header>
         <h1>Math Helper</h1>
       </header>
-      {messages?.map((message) => (
+      {/* {messages?.map((message) => (
         <article
           key={message._id}
           className={message.author === NAME ? "message-mine" : ""}
@@ -53,7 +61,25 @@ export default function App() {
           <div>{message.author}</div>
           <p>{message.body}</p>
         </article>
-      ))}
+      ))} */}
+      <aside className="stats">
+        <p>Correct Answers: {accuracy?.[0]?.correctAnswers ?? 0}</p>
+        <p>Incorrect Answers: {accuracy?.[0]?.incorrectAnswers ?? 0}</p>
+        <p>
+          Percent Correct:{" "}
+          {(() => {
+            const correct = accuracy?.[0]?.correctAnswers ?? 0;
+            const incorrect = accuracy?.[0]?.incorrectAnswers ?? 0;
+            const total = correct + incorrect;
+            return total > 0
+              ? `${((correct / total) * 100).toFixed(2)}%`
+              : "N/A";
+          })()}
+        </p>
+      </aside>
+
+      {/* ))} */}
+
       <div className="input-area button_row">
         <div className="button-group">
           <Button
