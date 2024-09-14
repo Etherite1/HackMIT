@@ -55,25 +55,18 @@ export default function App() {
         </article>
       ))}
       <div className="input-area button_row">
-        {/* <input
-          value={newMessageText}
-          onChange={(e) => setNewMessageText(e.target.value)}
-          placeholder="Write a query..."
-          style={{ width: '100%', marginBottom: '1rem' }}
-        /> */}
         <div className="button-group">
           <Button
             height={3}
             width={10}
             text="Correct"
-            onClick={updateCorrect}
-            // disabled={!newMessageText}
+            onClick={() => updateCorrect()} // Wrap in an anonymous function
           />
           <Button
             height={3}
             width={10}
             text="Incorrect"
-            onClick={updateIncorrect}
+            onClick={() => updateIncorrect()} // Wrap in an anonymous function
           />
         </div>
       </div>
