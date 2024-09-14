@@ -1,10 +1,26 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { useEffect, useState } from "react";
+import { ButtonHTMLAttributes, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
+import { updateCorrect, updateIncorrect } from "../convex/messages";
 
 // For demo purposes. In a real app, you'd have real user data.
 const NAME = faker.person.firstName();
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  height: number;
+  width: number;
+  text: string;
+}
+
+export function Button({ height, width, text, ...props }: ButtonProps) {
+  return (
+    <button type="submit" style={{ height: `${height}rem`, width: `${width}rem`, margin: '0 0.5rem',  // Add some horizontal margin
+  }} {...props}>
+      {text}
+    </button>
+  );
+}
 
 export default function App() {
   const messages = useQuery(api.messages.list);
@@ -21,13 +37,13 @@ export default function App() {
     }, 0);
   }, [messages]);
 
+  // 3 stages: skip/reveal, right/wrong, next
+  const [stage, setStage] = useState("skip_reveal");
+
   return (
     <main className="chat">
       <header>
-        <h1>Math Tutor</h1>
-        <p>
-          Connected as <strong>{NAME}</strong>
-        </p>
+        <h1>Math Helper</h1>
       </header>
       {messages?.map((message) => (
         <article
@@ -35,47 +51,31 @@ export default function App() {
           className={message.author === NAME ? "message-mine" : ""}
         >
           <div>{message.author}</div>
-
           <p>{message.body}</p>
         </article>
       ))}
-
-       <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await sendMessage({ body: newMessageText, author: NAME });
-          setNewMessageText("");
-        }}
-      >
-        <input
+      <div className="input-area button_row">
+        {/* <input
           value={newMessageText}
-          onChange={async (e) => {
-            const text = e.target.value;
-            setNewMessageText(text);
-          }}
-          placeholder="Ask a question…"
-        />
-        <button type="submit" disabled={!newMessageText}>
-          Send
-        </button>
-      </form>
-
-      {/* Buttons for Right/Wrong answers */}
-      <div className="answer-buttons">
-        <button
-          onClick={async () => {
-            await updateCorrect({});
-          }}
-        >
-          Right
-        </button>
-        <button
-          onClick={async () => {
-            await updateIncorrect({});
-          }}
-        >
-          Wrong
-        </button>
+          onChange={(e) => setNewMessageText(e.target.value)}
+          placeholder="Write a query..."
+          style={{ width: '100%', marginBottom: '1rem' }}
+        /> */}
+        <div className="button-group">
+          <Button
+            height={3}
+            width={10}
+            text="Correct"
+            onClick={updateCorrect}
+            // disabled={!newMessageText}
+          />
+          <Button
+            height={3}
+            width={10}
+            text="Incorrect"
+            onClick={updateIncorrect}
+          />
+        </div>
       </div>
     </main>
   );
