@@ -33,7 +33,7 @@ export default function App() {
     }, 0);
   }, [messages]);
 
-  // 3 stages: skip/reveal, right/wrong, next
+  // 4 stages: user_input, skip/reveal, right/wrong, next
   const [stage, setStage] = useState("skip_reveal");
 
   return (
@@ -50,29 +50,51 @@ export default function App() {
           <p>{message.body}</p>
         </article>
       ))}
-      <div className="input-area button_row">
-        {/* <input
-          value={newMessageText}
-          onChange={(e) => setNewMessageText(e.target.value)}
-          placeholder="Write a query..."
-          style={{ width: '100%', marginBottom: '1rem' }}
-        /> */}
+      {stage == "user_input" && 
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await sendMessage({ body: newMessageText, author: NAME });
+            setNewMessageText("");
+            setStage("skip_reveal");
+          }}
+        >
+          <input
+            value={newMessageText}
+            onChange={(e) => setNewMessageText(e.target.value)}
+            placeholder="Write a query..."
+            style={{ width: '100%'}}
+          />
+        </form>
+      }
+      {stage == "skip_reveal" &&
         <div className="button-group">
           <Button
             height={3}
             width={10}
-            text="Send"
-            // onClick={handleSend}
-            disabled={!newMessageText}
+            text="New Query"
+            onClick={() => {
+              setStage("user_input");
+            }}
           />
           <Button
             height={3}
             width={10}
-            text="Skip"
-            // onClick={handleSkip}
+            text="Similar Problem"
+            onClick={() => {
+
+            }}
+          />
+          <Button
+            height={3}
+            width={10}
+            text="Reveal Answer"
+            onClick={() => {
+              
+            }}
           />
         </div>
-      </div>
+}
     </main>
   );
 }
