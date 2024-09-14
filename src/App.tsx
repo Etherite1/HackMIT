@@ -9,6 +9,8 @@ const NAME = faker.person.firstName();
 export default function App() {
   const messages = useQuery(api.messages.list);
   const sendMessage = useMutation(api.messages.send);
+  const updateCorrect = useMutation(api.messages.updateCorrect); 
+  const updateIncorrect = useMutation(api.messages.updateIncorrect); 
 
   const [newMessageText, setNewMessageText] = useState("");
 
@@ -22,7 +24,7 @@ export default function App() {
   return (
     <main className="chat">
       <header>
-        <h1>Convex Chat</h1>
+        <h1>Math Tutor</h1>
         <p>
           Connected as <strong>{NAME}</strong>
         </p>
@@ -37,7 +39,8 @@ export default function App() {
           <p>{message.body}</p>
         </article>
       ))}
-      <form
+
+       <form
         onSubmit={async (e) => {
           e.preventDefault();
           await sendMessage({ body: newMessageText, author: NAME });
@@ -50,12 +53,30 @@ export default function App() {
             const text = e.target.value;
             setNewMessageText(text);
           }}
-          placeholder="Write a message…"
+          placeholder="Ask a question…"
         />
         <button type="submit" disabled={!newMessageText}>
           Send
         </button>
       </form>
+
+      {/* Buttons for Right/Wrong answers */}
+      <div className="answer-buttons">
+        <button
+          onClick={async () => {
+            await updateCorrect({});
+          }}
+        >
+          Right
+        </button>
+        <button
+          onClick={async () => {
+            await updateIncorrect({});
+          }}
+        >
+          Wrong
+        </button>
+      </div>
     </main>
   );
 }

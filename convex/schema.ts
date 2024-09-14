@@ -11,8 +11,9 @@ export default defineSchema({
   //   messageId: v.id("messages"), //id of question
   // }).index("byMessageId", ["messageId"]),
   users: defineTable({
-    userId: v.string(),        
+    // userId: v.id("messages"),        
     correctAnswers: v.number(), 
     incorrectAnswers: v.number(), 
-  }).index("byUserId", ["userId"]),
+  })
+  // .index("byUserId", ["userId"]),
 });
