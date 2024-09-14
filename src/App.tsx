@@ -1,35 +1,10 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { ButtonHTMLAttributes, useEffect, useState } from "react";
-import { faker } from "@faker-js/faker";
-import { updateCorrect, updateIncorrect } from "../convex/messages";
+import { useEffect, useState } from "react";
+import { Button } from "./Button";
 
 // For demo purposes. In a real app, you'd have real user data.
-const NAME = faker.person.firstName();
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  height: number;
-  width: number;
-  text: string;
-  background_color?: string;
-}
-
-export function Button({ height, width, text, background_color, ...props }: ButtonProps) {
-  return (
-    <button
-      type="submit"
-      style={{
-        height: `${height}rem`,
-        width: `${width}rem`,
-        margin: "0 0.5rem", // Add some horizontal margin
-        backgroundColor: background_color ?? "var(--primary)",
-      }}
-      {...props}
-    >
-      {text}
-    </button>
-  );
-}
+const NAME = "You"; 
 
 export default function App() {
   const messages = useQuery(api.messages.list);
