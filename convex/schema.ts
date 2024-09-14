@@ -6,4 +6,9 @@ export default defineSchema({
     author: v.string(),
     body: v.string(),
   }),
+  users: defineTable({
+    // userId: v.id("messages"),        
+    correctAnswers: v.number(), 
+    incorrectAnswers: v.number(), 
+  })
 });

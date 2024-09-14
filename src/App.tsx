@@ -2,19 +2,30 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { ButtonHTMLAttributes, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
+import { updateCorrect, updateIncorrect } from "../convex/messages";
 
 // For demo purposes. In a real app, you'd have real user data.
 const NAME = faker.person.firstName();
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   height: number;
   width: number;
   text: string;
+  background_color?: string;
 }
 
-export function Button({ height, width, text, ...props }: ButtonProps) {
+export function Button({ height, width, text, background_color, ...props }: ButtonProps) {
   return (
-    <button type="submit" style={{ height: `${height}rem`, width: `${width}rem`, margin: '0 0.5rem',  // Add some horizontal margin
-  }} {...props}>
+    <button
+      type="submit"
+      style={{
+        height: `${height}rem`,
+        width: `${width}rem`,
+        margin: "0 0.5rem", // Add some horizontal margin
+        backgroundColor: background_color ?? "var(--primary)",
+      }}
+      {...props}
+    >
       {text}
     </button>
   );
@@ -22,7 +33,10 @@ export function Button({ height, width, text, ...props }: ButtonProps) {
 
 export default function App() {
   const messages = useQuery(api.messages.list);
+  const accuracy = useQuery(api.messages.list_accuracy);
   const sendMessage = useMutation(api.messages.send);
+  const updateCorrect = useMutation(api.messages.updateCorrect);
+  const updateIncorrect = useMutation(api.messages.updateIncorrect);
 
   const [newMessageText, setNewMessageText] = useState("");
 
@@ -33,14 +47,31 @@ export default function App() {
     }, 0);
   }, [messages]);
 
-  // 4 stages: user_input, skip/reveal, right/wrong, next
-  const [stage, setStage] = useState("skip_reveal");
+  // 4 stages: user_input, skip_reveal, right_wrong, similar_new
+  const [stage, setStage] = useState("user_input");
 
   return (
     <main className="chat">
       <header>
         <h1>Math Helper</h1>
       </header>
+
+      <aside className="stats">
+        <p>Correct Answers: {accuracy?.[0]?.correctAnswers ?? 0}</p>
+        <p>Incorrect Answers: {accuracy?.[0]?.incorrectAnswers ?? 0}</p>
+        <p>
+          Percent Correct:{" "}
+          {(() => {
+            const correct = accuracy?.[0]?.correctAnswers ?? 0;
+            const incorrect = accuracy?.[0]?.incorrectAnswers ?? 0;
+            const total = correct + incorrect;
+            return total > 0
+              ? `${((correct / total) * 100).toFixed(2)}%`
+              : "N/A";
+          })()}
+        </p>
+      </aside>
+
       {messages?.map((message) => (
         <article
           key={message._id}
@@ -82,7 +113,7 @@ export default function App() {
             width={10}
             text="Similar Problem"
             onClick={() => {
-
+              setStage("skip_reveal");
             }}
           />
           <Button
@@ -90,11 +121,58 @@ export default function App() {
             width={10}
             text="Reveal Answer"
             onClick={() => {
-              
+              setStage("right_wrong");
             }}
           />
         </div>
-}
+      }
+      {stage == "right_wrong" && 
+        <div className="button-group">
+          <Button
+            height={3}
+            width={10}
+            text="Correct"
+            background_color="green"
+            onClick={() => {
+              updateCorrect();
+              setStage("similar_new")
+            }}
+            className="correct" // Add class for correct button
+          />
+          <Button
+            height={3}
+            width={10}
+            text="Incorrect"
+            background_color="red"
+            onClick={() => {
+              updateIncorrect();
+              setStage("similar_new")
+            }}
+            className="incorrect" // Add class for incorrect button
+          />
+        </div>
+      }
+      {stage == "similar_new" && 
+        <div className="button-group">
+          <Button
+            height={3}
+            width={10}
+            text="Similar Problem"
+            onClick={() => {
+              setStage("skip_reveal");
+            }}
+          />
+          <Button
+            height={3}
+            width={10}
+            text="New query"
+            background_color="red"
+            onClick={() => {
+              setStage("user_input");
+            }}
+          />
+        </div>
+      }
     </main>
   );
 }
