@@ -287,53 +287,120 @@ button {
   border-color: var(--focus-ring);
 }
 
-.chat form > button {
-  appearance: none;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: white;
-  font-size: 0;
-  transition: 0.15s ease-in-out opacity;
-
-  background-color: var(--primary);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='white' %3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5' /%3E%3C/svg%3E%0A");
-  background-size: 24px;
-  background-repeat: no-repeat;
-  background-position: center;
+.button_row {
+  position: fixed;
+  bottom: 8px;
+  left: 8px;
+  width: calc(100% - 16px);
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 16px;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  z-index: 3;
 }
 
-.chat button:disabled {
-  opacity: 0.7;
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
-article button {
-  position: absolute;
-  bottom: -0.5em;
-  right: -0.5em;
-  border: 0px;
-  border-radius: 10px;
-  padding: 0.3em;
-  z-index: 2;
-  min-width: 2em;
-  min-height: 1em;
+.button-group button.correct {
+  border-color: green; /* Border color for correct button */
 }
 
-article button {
-  display: none;
+.button-group button.incorrect {
+  border-color: red; /* Border color for incorrect button */
+}
+
+.button-group button.correct:hover {
+  background-color: green; /* Background color on hover for correct button */
+  color: white; /* Text color on hover for correct button */
+}
+
+.button-group button.incorrect:hover {
+  background-color: red; /* Background color on hover for incorrect button */
+  color: white; /* Text color on hover for incorrect button */
+}
+
+button {
   cursor: pointer;
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  border-radius: 8px;
 }
 
-article:hover button,
-article button:has(span) {
-  display: block;
+button:hover {
+  background-color: #d34d0f; /* Slightly darker shade of the primary color */
 }
 
-article button span {
-  padding-left: 0.2em;
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .button_row {
+    background-color: rgba(55, 65, 81, 0.8);
+  }
+}
+
+.chat input {
+  color: #111827;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  padding-left: 20px;
+  padding-right: 72px;
+  font-family: inherit;
+  border: 3px solid transparent;
+  border-radius: 16px;
+}
+
+.chat input::placeholder {
+  color: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  .chat input {
+    color: white;
+  }
+
+  .chat input::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.chat input:focus {
+  outline: 0;
+  border-color: var(--focus-ring);
+}
+
+.stats {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Optional drop shadow */
+  text-align: right; /* Align text to the right */
+  z-index: 1000; /* Make sure it's above other elements */
+}
+
+.stats p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
