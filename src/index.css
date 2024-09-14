@@ -57,6 +57,16 @@ button {
   cursor: pointer;
 }
 
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: 80px; /* Add padding to accommodate the button row */
+}
+
 .chat header {
   position: fixed;
   top: 0;
@@ -158,6 +168,12 @@ button {
   border-radius: 0;
 }
 
+.messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
 .chat article {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -232,25 +248,52 @@ button {
   justify-self: end;
 }
 
-.chat form {
+.button_row {
   position: fixed;
   bottom: 8px;
   left: 8px;
   width: calc(100% - 16px);
   height: 72px;
-  box-shadow:
-    0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 16px;
-  display: flex;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
   z-index: 3;
 }
 
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  border-radius: 8px;
+}
+
+button:hover {
+  background-color: #d34d0f; /* Slightly darker shade of the primary color */
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 @media (prefers-color-scheme: dark) {
-  .chat form {
+  .button_row {
     background-color: rgba(55, 65, 81, 0.8);
   }
 }
@@ -285,55 +328,4 @@ button {
 .chat input:focus {
   outline: 0;
   border-color: var(--focus-ring);
-}
-
-.chat form > button {
-  appearance: none;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: white;
-  font-size: 0;
-  transition: 0.15s ease-in-out opacity;
-
-  background-color: var(--primary);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='white' %3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5' /%3E%3C/svg%3E%0A");
-  background-size: 24px;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.chat button:disabled {
-  opacity: 0.7;
-}
-
-article button {
-  position: absolute;
-  bottom: -0.5em;
-  right: -0.5em;
-  border: 0px;
-  border-radius: 10px;
-  padding: 0.3em;
-  z-index: 2;
-  min-width: 2em;
-  min-height: 1em;
-}
-
-article button {
-  display: none;
-  cursor: pointer;
-}
-
-article:hover button,
-article button:has(span) {
-  display: block;
-}
-
-article button span {
-  padding-left: 0.2em;
 }
